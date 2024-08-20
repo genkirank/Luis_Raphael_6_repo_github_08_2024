@@ -15,7 +15,7 @@ const fetchData = (endpoint, options = {}) => {
 
 const displayGallery = (gallery) => {
   const galleryContainer = document.querySelector('.gallery');
-  galleryContainer.innerHTML = ''; // Clear the gallery before displaying new items
+  galleryContainer.innerHTML = ''; 
 
   gallery.forEach(element => {
     // Créer les éléments
@@ -24,11 +24,11 @@ const displayGallery = (gallery) => {
     const figcaption = document.createElement('figcaption');
 
     // Ajouter les attributs et le contenu
-    img.src = element.imageUrl; // Assurez-vous que l'objet `element` contient une propriété `imageUrl`
-    img.alt = element.title; // Assurez-vous que l'objet `element` contient une propriété `title`
+    img.src = element.imageUrl;
+    img.alt = element.title; 
     figcaption.textContent = element.title;
 
-    // Ajouter les éléments au DOM
+    
     figure.appendChild(img);
     figure.appendChild(figcaption);
     galleryContainer.appendChild(figure);
