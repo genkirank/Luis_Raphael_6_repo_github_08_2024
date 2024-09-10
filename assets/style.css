@@ -64,9 +64,22 @@ body {
 	font-size: 14px;
 }
 .login{
+	display: flex;
 	margin-top: 150px;
 	margin-bottom: 355px;
+	align-items: center;
+	justify-content: center;
 
+}
+.password{ display: flex;
+	color: #3D3D3D;
+	font-family: "Work Sans";
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: normal;
+	text-decoration-line: underline;
+	align-self: center;
 }
 input:focus {
 	Outline:none;
@@ -137,7 +150,10 @@ nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
 }
-
+.logo{
+	height: 22px;
+	width: 22px;
+}
 li:hover {
 	color: #B1663C;
 }
