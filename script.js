@@ -81,10 +81,12 @@ fetchData("/categories").then((categories) => {
 
 // Fonction pour réinitialiser le background et la couleur du texte de tous les boutons
 const resetButtonBackgrounds = () => {
+
   document.querySelectorAll(".button-category").forEach((btn) => {
     btn.style.backgroundColor = "white";
     btn.style.color = "#1D6154"; // Réinitialiser la couleur du texte
   });
+
 };
 
 const login = async (Data) => {
@@ -99,8 +101,24 @@ const login = async (Data) => {
   if (!response.ok) {
     throw new Error("Problème : " + response.statusText);
   }
-  return await response.json();
+  console.log(response)
+  const token = await response.json();
+
+  const tokenString = JSON.stringify(token);
+  window.localStorage.setItem("loginData", tokenString);
+  if (response.ok) {
+    window.location.href = "index.html"
+
+  }
 };
+
+function veriFierChamps(balise) {
+  if (balise.value === "") {
+    balise.classlist.add("error")
+  } else {
+    balise.classlist.remove("error")
+  }
+}
 
 const myForm = document.querySelector("#login");
 myForm.addEventListener("submit", function (e) {
@@ -113,8 +131,6 @@ myForm.addEventListener("submit", function (e) {
     password: form.querySelector("#pass").value,
 
   };
-  console.log("donnes dur form ",
-      Data),
-    login(Data);
-
+  veriFierChamps(Data.email)
+  login(Data);
 });
