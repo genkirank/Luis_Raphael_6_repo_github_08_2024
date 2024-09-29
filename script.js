@@ -1,5 +1,6 @@
 const api = "http://localhost:5678/api";
 
+
 const fetchData = async (endpoint) => {
   try {
     const response = await fetch(api + endpoint);
@@ -55,9 +56,7 @@ fetchData("/categories").then((categories) => {
       button.style.color = "#FFF";
 
       fetchData("/works").then((gallery) => {
-        const filteredGallery = gallery.filter(
-          (elementWorks) => element.id === elementWorks.categoryId
-        );
+        const filteredGallery = gallery.filter((elementWorks) => element.id === elementWorks.categoryId);
         displayGallery(filteredGallery);
       });
     };
@@ -81,44 +80,48 @@ fetchData("/categories").then((categories) => {
 
 // Fonction pour réinitialiser le background et la couleur du texte de tous les boutons
 const resetButtonBackgrounds = () => {
-
   document.querySelectorAll(".button-category").forEach((btn) => {
     btn.style.backgroundColor = "white";
     btn.style.color = "#1D6154"; // Réinitialiser la couleur du texte
   });
-
 };
 
 const login = async (Data) => {
+  try {
+    const response = await fetch(api + "/users/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(Data)
+    });
 
-  const response = await fetch(api + "/users/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(Data),
-  });
-  if (!response.ok) {
-    throw new Error("Problème : " + response.statusText);
-  }
-  console.log(response)
-  const token = await response.json();
+    if (!response.ok) {
+      if (response.status === 401, 404) {
+        throw new Error("Identifiants incorrects");
+      } else {
+        throw new Error("Problème : " + response.statusText);
+      }
+    }
 
-  const tokenString = JSON.stringify(token);
-  window.localStorage.setItem("loginData", tokenString);
-  if (response.ok) {
-    window.location.href = "index.html"
+    const token = await response.json();
+    const tokenString = JSON.stringify(token);
+    window.localStorage.setItem("loginData", tokenString);
 
+    window.location.href = "index.html";
+
+  } catch (error) {
+    displayErrorMessage(error.message);
   }
 };
 
-function veriFierChamps(balise) {
-  if (balise.value === "") {
-    balise.classlist.add("error")
-  } else {
-    balise.classlist.remove("error")
-  }
-}
+const displayErrorMessage = (message) => {
+  const errorMessageElement = document.querySelector(".error-message");
+  errorMessageElement.textContent = message;
+  errorMessageElement.style.display = "block";
+};
+
+
 
 const myForm = document.querySelector("#login");
 myForm.addEventListener("submit", function (e) {
@@ -129,8 +132,24 @@ myForm.addEventListener("submit", function (e) {
   const Data = {
     email: form.querySelector("#email").value,
     password: form.querySelector("#pass").value,
-
   };
-  veriFierChamps(Data.email)
+
+
+
   login(Data);
+});
+
+const openModal = function (e) {
+  e.preventDefault();
+  const modal = document.querySelector("#modal1");
+  const overlay = document.querySelector("#modal-oerlay");
+  if (modal) {
+    modal.style.display = "block";
+    modal.removeAttribute("aria-hidden");
+    modal.setAttribute("aria-modal", "true");
+  }
+};
+
+document.querySelectorAll('.Js-modal').forEach(button => {
+  button.addEventListener('click', openModal);
 });
