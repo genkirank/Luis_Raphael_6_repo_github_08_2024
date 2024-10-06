@@ -28,13 +28,16 @@ const displayGallery = (gallery) => {
     // Créer les éléments
     const figure = document.createElement("figure");
     const img = document.createElement("img");
+    const figcaption = document.createElement("figcaption");
 
     // Ajouter les attributs et le contenu
     img.src = element.imageUrl;
     img.alt = element.title;
+    figcaption.textContent = element.title;
 
     // Ajouter l'image à la figure et la figure au conteneur
     figure.appendChild(img);
+    figure.appendChild(figcaption);
     galleryContainer.appendChild(figure);
   });
 };
@@ -96,6 +99,7 @@ const openModal = function (e) {
   modal = target;
   modal.addEventListener("click", closeModal);
   modal.querySelector(".js-close-modal").addEventListener("click", closeModal);
+  modal.querySelector(".js-modal-stop").addEventListener("click", stopPropagation);
 
   // Charger les photos dans la modale
   fetchData("/works").then(loadPhoto);
@@ -109,13 +113,27 @@ const closeModal = function (e) {
   modal.setAttribute("aria-modal", "false");
   modal.removeEventListener("click", closeModal);
   modal.querySelector(".js-close-modal").removeEventListener("click", closeModal);
+  modal.querySelector(".js-modal-stop").removeEventListener("click", stopPropagation);
+
   modal = null;
 };
+
+const stopPropagation = function (e) {
+  e.stopPropagation()
+}
 
 document.querySelectorAll(".Js-modal").forEach((button) => {
   button.addEventListener("click", openModal);
 });
 
+window.addEventListener('keydown', function (e) {
+  console.log(e.key)
+  if (e.key === "Escape" || e.key == 'Esc') {
+    closeModal(e)
+  }
+});
+
+//charge les photos de la modal 
 const loadPhoto = (photos) => {
   const deletePhotoContainer = document.querySelector(".Delete-photo");
   if (!deletePhotoContainer) {
@@ -125,26 +143,34 @@ const loadPhoto = (photos) => {
 
   deletePhotoContainer.innerHTML = "";
 
-  photos.forEach((element) => {
+  photos.forEach((photo) => {
     const figure = document.createElement("figure");
     const img = document.createElement("img");
-
-    img.src = element.imageUrl;
-    img.alt = element.title || "";
-
+    const trash = document.createElement("div");
+    trash.style.width = "5px";
+    trash.textContent = "trash";
+    img.src = photo.imageUrl;
+    img.alt = photo.title || "";
     img.style.width = "77px";
     img.style.height = "108px";
     img.style.flexShrink = "0";
     img.style.objectFit = "cover";
-    img.style.margin = "5px";
+    img.style.margin = "4px";
+
     deletePhotoContainer.style.display = "flex";
     deletePhotoContainer.style.flexWrap = "wrap";
     deletePhotoContainer.style.justifyContent = "center";
     deletePhotoContainer.style.gap = "15px";
-
+    figure.appendChild(trash);
     figure.appendChild(img);
     deletePhotoContainer.appendChild(figure);
+    trash.addEventListener('click', () => {
+      console.log(photo.id)
+      fetch(api + "/works/" + photo.id)
+
+    });
   });
+
 };
 
 // Charger la galerie une fois que le DOM est prêt

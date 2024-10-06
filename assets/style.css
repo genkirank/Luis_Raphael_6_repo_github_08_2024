@@ -409,7 +409,7 @@ footer nav ul {
 }
 
 .modal-wrapper {
-	width: 630px;
+	width: 430px;
 	height: 688px;
 	flex-shrink: 0;
 	position: absolute;
@@ -418,7 +418,7 @@ footer nav ul {
 	transform: translate(-50%, -50%);
 	border-radius: 10px;
 	background: #FFF;
-	padding: 20px;
+	padding: 20px 100px 20px 100px;
 }
 
 .Galerie-photo h1 {
