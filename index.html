@@ -17,11 +17,14 @@
 		<img src="assets/icons/vector.png" alt="logo"> 
 		<h1>Mode édition</h1>
 	</button>
-	<aside id ="modal1" class="modal" aria-hidden="true" role="dialog" arial-modal="false" style="display: none;">
+	<aside id ="modal1" class="modal" aria-hidden="true" role="dialog" aria-modal="false" style="display: none;">
 		<div class="modal-wrapper">
+			<button class="js-close-modal">fermer</button>
 			<div class="Galerie-photo">
 				<h1>Galerie-photo</h1>
 			</div>
+			<div class="Delete-photo"></div>
+			
 			<div class="Ajout-photo"></div>
 		</div>
 	</aside>
@@ -76,6 +79,6 @@
 		</ul>
 	</nav>
 </footer>
-<script src="script.js"></script>
+<script src="script.js"  ></script>
 </body>
 </html> const api = "http://localhost:5678/api";

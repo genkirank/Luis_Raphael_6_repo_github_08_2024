@@ -416,7 +416,8 @@ footer nav ul {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	background-color: #FFF;
+	border-radius: 10px;
+	background: #FFF;
 	padding: 20px;
 }
 
@@ -428,4 +429,6 @@ footer nav ul {
 	font-style: normal;
 	font-weight: 400;
 	line-height: normal;
+	padding-bottom: 40px;
+
 }
