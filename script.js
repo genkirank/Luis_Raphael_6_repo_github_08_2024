@@ -1,5 +1,5 @@
 const api = "http://localhost:5678/api";
-
+let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY1MTg3NDkzOSwiZXhwIjoxNjUxOTYxMzM5fQ.JGN1p8YIfR-M-5eQ-Ypy6Ima5cKA4VbfL2xMr2MgHm4";
 const fetchData = async (endpoint) => {
   try {
     const response = await fetch(api + endpoint);
@@ -144,36 +144,46 @@ const loadPhoto = (photos) => {
   deletePhotoContainer.innerHTML = "";
 
   photos.forEach((photo) => {
+    // Créer les éléments figure, img et div (pour l'icône "trash")
     const figure = document.createElement("figure");
     const img = document.createElement("img");
-    const trash = document.createElement("div");
-    trash.style.width = "5px";
-    trash.textContent = "trash";
-    img.src = photo.imageUrl;
-    img.alt = photo.title || "";
-    img.style.width = "77px";
-    img.style.height = "108px";
-    img.style.flexShrink = "0";
-    img.style.objectFit = "cover";
-    img.style.margin = "4px";
+    const trashIcon = document.createElement("img");
 
-    deletePhotoContainer.style.display = "flex";
-    deletePhotoContainer.style.flexWrap = "wrap";
-    deletePhotoContainer.style.justifyContent = "center";
-    deletePhotoContainer.style.gap = "15px";
-    figure.appendChild(trash);
+
+    trashIcon.src = "assets/icons/trashlogo.png";
+    trashIcon.alt = "Delete Icon";
+    trashIcon.classList.add("trash-icon");
+
+    img.classList.add("img-style");
+    img.src = photo.imageUrl;
+    img.alt = photo.title || "Photo";
+
+    // Ajouter l'événement de suppression de la photo
+    trashIcon.addEventListener('click', async () => {
+      try {
+        console.log(photo.id);
+        const response = await fetch(api + "/works/" + photo.id, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Erreur lors de la suppression : " + response.statusText);
+        }
+        console.log("Photo supprimée avec succès.");
+        figure.remove(); // Supprime la figure de la page
+      } catch (error) {
+        console.error("Erreur :", error.message);
+      }
+    });
+
+    // Ajouter les éléments à la figure et au conteneur de suppression de photos
+    figure.appendChild(trashIcon);
     figure.appendChild(img);
     deletePhotoContainer.appendChild(figure);
-    trash.addEventListener('click', () => {
-      console.log(photo.id)
-      fetch(api + "/works/" + photo.id)
-
-    });
   });
-
 };
 
-// Charger la galerie une fois que le DOM est prêt
-document.addEventListener("DOMContentLoaded", () => {
-  loadGallery(); // Appelle loadGallery pour démarrer le chargement des photos
-});
+//---------test--------//`

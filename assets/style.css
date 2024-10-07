@@ -399,6 +399,16 @@ footer nav ul {
 
 }
 
+.js-close-modal {
+	width: 10%;
+	border: white;
+	background: WHITE;
+	position: relative;
+	left: +110%;
+	font-size: 24px;
+	font-family: "Work Sans";
+}
+
 .modal {
 	position: fixed;
 	top: 0%;
@@ -410,7 +420,7 @@ footer nav ul {
 
 .modal-wrapper {
 	width: 430px;
-	height: 688px;
+	height: 648px;
 	flex-shrink: 0;
 	position: absolute;
 	top: 50%;
@@ -431,4 +441,49 @@ footer nav ul {
 	line-height: normal;
 	padding-bottom: 40px;
 
+}
+
+/* Conteneur pour chaque image et l'icône de suppression */
+.image-container {
+	position: relative;
+	/* Conteneur parent avec position relative */
+	display: inline-block;
+	/* Permet d'afficher les éléments en ligne */
+	width: 150px;
+	/* Largeur de l'image (ajuste selon ton besoin) */
+	height: 150px;
+	/* Hauteur de l'image (ajuste selon ton besoin) */
+	margin: 10px;
+	/* Espacement autour des images */
+	overflow: hidden;
+	/* Cache les débordements */
+}
+
+/* Image avec ajustement de taille */
+.img-style {
+
+	width: 77px;
+	height: 108px;
+	flex-shrink: 0;
+	object-fit: cover;
+	margin: 4px;
+
+	display: block;
+	/* Supprime les espaces blancs autour */
+}
+
+/* Icône de suppression avec position absolue */
+.trash-icon {
+	position: relative;
+	cursor: pointer;
+	right: 0%;
+	height: -4%;
+	transition: transform 0.3s ease;
+}
+
+.Delete-photo {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 15px;
 }
