@@ -1,28 +1,27 @@
 const api = "http://localhost:5678/api";
 
-const login = async (Data) => {
+const login = async (data) => {
     try {
         const response = await fetch(api + "/users/login", {
             method: "POST",
+            body: JSON.stringify(data),
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(Data)
         });
 
         if (!response.ok) {
-            if (response.status === 401, 404) {
+            if (response.status === 401 || response.status === 404) {
                 throw new Error("Identifiants incorrects");
             } else {
                 throw new Error("Problème : " + response.statusText);
             }
+        } else {
+            const Data = await response.json
+            const token = Data.token
+            localStorage.setItem("authToken", token)
+            window.location.href = "index.html";
         }
-
-        const token = await response.json();
-        const tokenString = JSON.stringify(token);
-        window.localStorage.setItem("loginData", tokenString);
-
-        window.location.href = "index.html";
 
     } catch (error) {
         displayErrorMessage(error.message);
@@ -31,11 +30,13 @@ const login = async (Data) => {
 
 const displayErrorMessage = (message) => {
     const errorMessageElement = document.querySelector(".error-message");
-    errorMessageElement.textContent = message;
-    errorMessageElement.style.display = "block";
+    if (errorMessageElement) {
+        errorMessageElement.textContent = message;
+        errorMessageElement.style.display = "block";
+    } else {
+        console.error("Element for displaying error message not found.");
+    }
 };
-
-
 
 const myForm = document.querySelector("#login");
 myForm.addEventListener("submit", function (e) {
@@ -43,12 +44,10 @@ myForm.addEventListener("submit", function (e) {
 
     const form = e.target;
 
-    const Data = {
+    const data = {
         email: form.querySelector("#email").value,
         password: form.querySelector("#pass").value,
     };
 
-
-
-    login(Data);
+    login(data); // Appelle la fonction de connexion avec les données du formulaire
 });

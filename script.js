@@ -1,5 +1,6 @@
 const api = "http://localhost:5678/api";
-let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY1MTg3NDkzOSwiZXhwIjoxNjUxOTYxMzM5fQ.JGN1p8YIfR-M-5eQ-Ypy6Ima5cKA4VbfL2xMr2MgHm4";
+
+// Fonction de récupération des données
 const fetchData = async (endpoint) => {
   try {
     const response = await fetch(api + endpoint);
@@ -14,36 +15,37 @@ const fetchData = async (endpoint) => {
   }
 };
 
+// Charger la galerie
 const loadGallery = async () => {
   const gallery = await fetchData("/works");
   displayGallery(gallery);
 };
 
+// Afficher la galerie
 const displayGallery = (gallery) => {
   const galleryContainer = document.querySelector(".gallery");
   if (!galleryContainer) return;
 
   galleryContainer.innerHTML = "";
   gallery.forEach((element) => {
-    // Créer les éléments
     const figure = document.createElement("figure");
     const img = document.createElement("img");
     const figcaption = document.createElement("figcaption");
 
-    // Ajouter les attributs et le contenu
     img.src = element.imageUrl;
     img.alt = element.title;
     figcaption.textContent = element.title;
 
-    // Ajouter l'image à la figure et la figure au conteneur
     figure.appendChild(img);
     figure.appendChild(figcaption);
     galleryContainer.appendChild(figure);
   });
 };
 
-fetchData("/works").then(displayGallery);
+// Charger la galerie initiale
+loadGallery();
 
+// Charger les catégories
 fetchData("/categories").then((categories) => {
   const categoryContainer = document.querySelector(".catégorie");
 
@@ -57,14 +59,15 @@ fetchData("/categories").then((categories) => {
       button.style.color = "#FFF";
 
       fetchData("/works").then((gallery) => {
-        const filteredGallery = gallery.filter((elementWorks) => element.id === elementWorks.categoryId);
+        const filteredGallery = gallery.filter(
+          (elementWorks) => element.id === elementWorks.categoryId
+        );
         displayGallery(filteredGallery);
       });
     };
     categoryContainer.appendChild(button);
   });
 
-  // Ajouter le bouton "Tous"
   const allButton = document.createElement("button");
   allButton.textContent = "Tous";
   allButton.className = "button-category";
@@ -78,6 +81,7 @@ fetchData("/categories").then((categories) => {
   categoryContainer.insertBefore(allButton, categoryContainer.firstChild);
 });
 
+// Réinitialiser les styles des boutons de catégorie
 const resetButtonBackgrounds = () => {
   document.querySelectorAll(".button-category").forEach((btn) => {
     btn.style.backgroundColor = "white";
@@ -85,12 +89,13 @@ const resetButtonBackgrounds = () => {
   });
 };
 
-// Modal
+// Gestion de la modale
 let modal = null;
 
 const openModal = function (e) {
   e.preventDefault();
   const target = document.querySelector("#modal1");
+  if (!target) return;
 
   target.style.display = "block";
   target.removeAttribute("aria-hidden");
@@ -101,7 +106,6 @@ const openModal = function (e) {
   modal.querySelector(".js-close-modal").addEventListener("click", closeModal);
   modal.querySelector(".js-modal-stop").addEventListener("click", stopPropagation);
 
-  // Charger les photos dans la modale
   fetchData("/works").then(loadPhoto);
 };
 
@@ -119,21 +123,20 @@ const closeModal = function (e) {
 };
 
 const stopPropagation = function (e) {
-  e.stopPropagation()
-}
+  e.stopPropagation();
+};
 
 document.querySelectorAll(".Js-modal").forEach((button) => {
   button.addEventListener("click", openModal);
 });
 
-window.addEventListener('keydown', function (e) {
-  console.log(e.key)
-  if (e.key === "Escape" || e.key == 'Esc') {
-    closeModal(e)
+window.addEventListener("keydown", function (e) {
+  if (e.key === "Escape" || e.key == "Esc") {
+    closeModal(e);
   }
 });
 
-//charge les photos de la modal 
+// Charger les photos dans la modale
 const loadPhoto = (photos) => {
   const deletePhotoContainer = document.querySelector(".Delete-photo");
   if (!deletePhotoContainer) {
@@ -144,11 +147,9 @@ const loadPhoto = (photos) => {
   deletePhotoContainer.innerHTML = "";
 
   photos.forEach((photo) => {
-    // Créer les éléments figure, img et div (pour l'icône "trash")
     const figure = document.createElement("figure");
     const img = document.createElement("img");
     const trashIcon = document.createElement("img");
-
 
     trashIcon.src = "assets/icons/trashlogo.png";
     trashIcon.alt = "Delete Icon";
@@ -158,32 +159,44 @@ const loadPhoto = (photos) => {
     img.src = photo.imageUrl;
     img.alt = photo.title || "Photo";
 
-    // Ajouter l'événement de suppression de la photo
-    trashIcon.addEventListener('click', async () => {
+    trashIcon.addEventListener("click", async () => {
       try {
-        console.log(photo.id);
         const response = await fetch(api + "/works/" + photo.id, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
+            "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
           },
         });
         if (!response.ok) {
           throw new Error("Erreur lors de la suppression : " + response.statusText);
         }
-        console.log("Photo supprimée avec succès.");
-        figure.remove(); // Supprime la figure de la page
+        figure.remove();
       } catch (error) {
         console.error("Erreur :", error.message);
       }
     });
 
-    // Ajouter les éléments à la figure et au conteneur de suppression de photos
     figure.appendChild(trashIcon);
     figure.appendChild(img);
     deletePhotoContainer.appendChild(figure);
   });
 };
 
-//---------test--------//`
+// Gestion du bouton édition et affichage selon connexion
+const token = localStorage.getItem("authToken");
+const editionElement = document.querySelector(".edition");
+const modalElement = document.querySelector(".Js-modal");
+
+if (editionElement) {
+  if (token) {
+    editionElement.style.display = "block"; // Affiche le bouton d'édition si l'utilisateur est connecté
+  } else {
+    editionElement.style.display = "none"; // Cache le bouton d'édition si l'utilisateur n'est pas connecté
+  }
+}
+
+// Optionnel : gérer l'affichage du modal
+if (modalElement) {
+  modalElement.style.display = token ? "block" : "none"; // Affiche ou cache le modal selon l'état de connexion
+}
