@@ -21,7 +21,8 @@ const loadGallery = async () => {
   displayGallery(gallery);
 };
 
-// Afficher la galerie
+// Afficher la galerie //vas chercher le conteneur html et creé les elements (photos) puis les creé et affiche 
+
 const displayGallery = (gallery) => {
   const galleryContainer = document.querySelector(".gallery");
   if (!galleryContainer) return;
@@ -45,19 +46,22 @@ const displayGallery = (gallery) => {
 // Charger la galerie initiale
 loadGallery();
 
-// Charger les catégories
+// ------------------------CGestion des Boutons de Catégories-------------------------------------------------
+
 fetchData("/categories").then((categories) => {
   const categoryContainer = document.querySelector(".catégorie");
-
+  //Création des Boutons pour Chaque Catégorie
   categories.forEach((element) => {
     const button = document.createElement("button");
     button.textContent = element.name;
     button.className = "button-category";
+
+    //Ajout d’un Gestionnaire d’Événements onclick à Chaque Bouton
     button.onclick = () => {
       resetButtonBackgrounds();
       button.style.backgroundColor = "#1D6154";
       button.style.color = "#FFF";
-
+      // filtre les oeuvres et renvois les renvois que celle demander 
       fetchData("/works").then((gallery) => {
         const filteredGallery = gallery.filter(
           (elementWorks) => element.id === elementWorks.categoryId
@@ -67,7 +71,7 @@ fetchData("/categories").then((categories) => {
     };
     categoryContainer.appendChild(button);
   });
-
+  // Création d’un Bouton Supplémentaire “Tous”
   const allButton = document.createElement("button");
   allButton.textContent = "Tous";
   allButton.className = "button-category";
@@ -88,10 +92,30 @@ const resetButtonBackgrounds = () => {
     btn.style.color = "#1D6154";
   });
 };
+//------------------------gestion logint logout ------------------------------------------------------------//
+function loginLogout() {
+  const token = localStorage.getItem('authToken')
+  const logoutLink = document.getElementById('logoutLink')
+  const loginLink = document.getElementById('loginLink')
 
-// Gestion de la modale
+  if (token) {
+    logoutLink.style.display = 'block'
+    loginLink.style.display = 'none'
+    logoutLink.addEventListener('click', () => {
+      localStorage.removeItem('authToken')
+      window.location.reload()
+    })
+  } else {
+    logoutLink.style.display = 'none'
+    loginLink.style.display = 'block'
+  }
+}
+loginLogout(); //apelle de la fonction 
+const modifPortfolio = document.getElementById('modif-portfolio')
+
+// --------------------Gestion de la modale----------------------------------------------------------
 let modal = null;
-
+//Ouverture de la Modal
 const openModal = function (e) {
   e.preventDefault();
   const target = document.querySelector("#modal1");
@@ -108,7 +132,7 @@ const openModal = function (e) {
 
   fetchData("/works").then(loadPhoto);
 };
-
+//-------------------------Fermeture de la Modale-------------------
 const closeModal = function (e) {
   if (modal === null) return;
   e.preventDefault();
@@ -121,7 +145,7 @@ const closeModal = function (e) {
 
   modal = null;
 };
-
+//Gestion des Événements(permet de sortir de la moldal en utlisant ta touche echape )
 const stopPropagation = function (e) {
   e.stopPropagation();
 };
@@ -138,27 +162,28 @@ window.addEventListener("keydown", function (e) {
 
 // Charger les photos dans la modale
 const loadPhoto = (photos) => {
+  //Sélection du Conteneur
   const deletePhotoContainer = document.querySelector(".Delete-photo");
   if (!deletePhotoContainer) {
     console.error("Conteneur '.Delete-photo' introuvable");
     return;
   }
-
+  // vide le conteneur et évite d'avoir des doulons
   deletePhotoContainer.innerHTML = "";
 
   photos.forEach((photo) => {
     const figure = document.createElement("figure");
-    const img = document.createElement("img");
+    //cree des iconne trash 
     const trashIcon = document.createElement("img");
-
     trashIcon.src = "assets/icons/trashlogo.png";
     trashIcon.alt = "Delete Icon";
     trashIcon.classList.add("trash-icon");
-
+    //-------------cree les img----------
+    const img = document.createElement("img");
     img.classList.add("img-style");
     img.src = photo.imageUrl;
     img.alt = photo.title || "Photo";
-
+    // --------------------Gestionnaire d’Événement pour la Suppression----------
     trashIcon.addEventListener("click", async () => {
       try {
         const response = await fetch(api + "/works/" + photo.id, {
@@ -183,20 +208,43 @@ const loadPhoto = (photos) => {
   });
 };
 
-// Gestion du bouton édition et affichage selon connexion
+// ----------------------Gestion du bouton édition et affichage selon connexion--------------------------------
 const token = localStorage.getItem("authToken");
 const editionElement = document.querySelector(".edition");
-const modalElement = document.querySelector(".Js-modal");
+const modifierElement = document.querySelector(".modifier");
+const catégorieElement = document.querySelector(".catégorie");
+
 
 if (editionElement) {
   if (token) {
-    editionElement.style.display = "block"; // Affiche le bouton d'édition si l'utilisateur est connecté
+    catégorieElement.style.display = "none";
+    modifierElement.style.display = "";
+    editionElement.style.display = ""; // Affiche le bouton d'édition si l'utilisateur est connecté
   } else {
-    editionElement.style.display = "none"; // Cache le bouton d'édition si l'utilisateur n'est pas connecté
+    modifierElement.style.display = "none";
+    editionElement.style.display = "none";
+    catégorieElement.style.display = "";
   }
 }
+//-----------------------ajouter image ----------------------------
+const addPhotoButton = document.querySelector(".Ajout-photo"); // Sélectionne le bouton
+const ajoutPhotoContent = document.querySelector("#ajoutPhotoContent"); // recupére le html de <dialog> 
+const addmodal = document.querySelector(".modal-wrapper")
+const changeToAddPictureModal = () => {
+  // Assure-toi que la modale est bien ouverte avant de changer le contenu
+  if (!modal) return;
 
-// Optionnel : gérer l'affichage du modal
-if (modalElement) {
-  modalElement.style.display = token ? "block" : "none"; // Affiche ou cache le modal selon l'état de connexion
-}
+  // Copier le contenu du dialog dans la modale existante
+  addmodal.innerHTML = ajoutPhotoContent.innerHTML;
+
+  // Ajouter des gestionnaires d'événements pour fermer la nouvelle modale
+  const closeModalBtn = addmodal.querySelector(".js-close-modal");
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener("click", closeModal);
+  }
+
+  addmodal.style.display = "block"; // Affiche la modale mise à jour
+};
+
+// Ajoute l'événement pour changer le contenu lorsque le bouton est cliqué
+addPhotoButton.addEventListener("click", changeToAddPictureModal);

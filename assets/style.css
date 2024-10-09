@@ -109,6 +109,7 @@ section {
 
 body {
 	line-height: 1;
+	background: #FFFEF8;
 }
 
 ol,
@@ -251,7 +252,8 @@ nav li {
 	width: 22px;
 }
 
-li:hover {
+ul li#logoutLink a:hover,
+ul li a:hover {
 	color: #b1663c;
 }
 
@@ -282,9 +284,15 @@ li:hover {
 	margin-bottom: 0.5em;
 }
 
+#portfolio {
+	flex-direction: column;
+	align-items: center;
+	display: flex;
+	justify-content: center;
+}
+
 #portfolio h2 {
 	text-align: center;
-	margin-bottom: 1em;
 }
 
 .gallery {
@@ -358,6 +366,16 @@ footer nav ul {
 	display: none;
 }
 
+.modifier {
+	color: #000;
+	text-align: center;
+	font-family: "Work Sans";
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+}
+
 .edition {
 	position: absolute;
 	top: 0;
@@ -397,6 +415,29 @@ footer nav ul {
 	line-height: normal;
 	padding: 20PX 0px 20px;
 
+}
+
+#black-pen-to-square {
+	color: #000;
+}
+
+#modif-portfolio {
+	margin-top: 1rem;
+	margin-left: 15px;
+	padding-bottom: 10px;
+	font-weight: 400;
+	font-size: 14px;
+	text-decoration: none;
+	color: black;
+}
+
+.projet {
+	margin-top: 8rem;
+	gap: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 15px;
 }
 
 .js-close-modal {
@@ -487,4 +528,18 @@ footer nav ul {
 	flex-wrap: wrap;
 	justify-content: center;
 	gap: 15px;
+}
+
+.Ajout-photo {
+	font-family: Syne;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 16.8px;
+	text-align: center;
+	padding: 10px 49px 10px 49px;
+	border: none;
+	gap: 0px;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	background-color: #1d6154;
+	color: #FFF;
 }

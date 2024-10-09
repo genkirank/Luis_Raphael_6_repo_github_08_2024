@@ -17,6 +17,7 @@
 		<img src="assets/icons/vector.png" alt="logo"> 
 		<h1>Mode édition</h1>
 	</button>
+	<!---------------modal--------zz---------->
 	<aside id ="modal1" class="modal" aria-hidden="true" role="dialog" aria-modal="false" style="display: none;">
 		<div class="modal-wrapper js-modal-stop">
 			<button class="js-close-modal">X</button>
@@ -28,12 +29,40 @@
 			<button class="Ajout-photo">Ajouter une photo</button>
 		</div>
 	</aside>
+
+	<dialog id="ajoutPhotoContent">
+		<h2>Ajout photo</h2>
+<form id="photoForm">
+  <div class="form-group">
+    <label for="photoUpload" class="photo-upload-label">
+      <span>+ Ajouter photo</span>
+      <input type="file" id="photoUpload" accept=".jpg, .jpeg, .png" style="display: none;" />
+      <p>jpg, png : 4mo max</p>
+    </label>
+  </div>
+  <div class="form-group">
+    <label for="photoTitle">Titre</label>
+    <input type="text" id="photoTitle" placeholder="Titre de la photo" />
+  </div>
+  <div class="form-group">
+    <label for="photoCategory">Catégorie</label>
+    <select id="photoCategory">
+      <option value="" disabled selected>Sélectionner une catégorie</option>
+      <!-- Les options de catégorie seront ajoutées dynamiquement -->
+    </select>
+  </div>
+  <button type="submit" class="submit-button">Valider</button>
+</form>
+	</dialog>
+<!---------------------------------------------------------------------->
+
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
 		<ul>
 			<li><a href="#portfolio">projets</a></li>
 			<li><a href="#contact">contact</a></li>
-			<li><a href="/login.html">login</a></li>
+			<li id="logoutLink" style="display: none;"><a href="#">Logout</a></li>
+			<li id="loginLink"><a href="/login.html">Login</a></li>
 			<li><img class="logo" src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
@@ -51,11 +80,15 @@
 		</article>
 	</section>
 	<section id="portfolio">
-		<h2>Mes Projets</h2>
-		<div class="catégorie ">
+		<div class="projet">
+			<h2>Mes Projets</h2>
+			<div class="Js-modal modifier"> 
+				<img src="assets/icons/black-pen-to-square.png" alt="logo" id="black-pen-to-square" > 
+				<a id="modif-portfolio" class="hidden"></i>modifier</a>
+			</div>
 		</div>
-		<div class="gallery">
-		</div>
+		<div class="catégorie "></div>
+		<div class="gallery"></div>
 	</section>
 	<section id="contact">
 		<h2>Contact</h2>
@@ -81,4 +114,4 @@
 </footer>
 <script src="script.js"  ></script>
 </body>
-</html> const api = "http://localhost:5678/api";
+</html> 
