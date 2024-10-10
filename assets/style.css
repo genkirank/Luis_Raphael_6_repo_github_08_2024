@@ -445,7 +445,7 @@ footer nav ul {
 	border: white;
 	background: WHITE;
 	position: relative;
-	left: +110%;
+	left: +100%;
 	font-size: 24px;
 	font-family: "Work Sans";
 }
@@ -530,6 +530,14 @@ footer nav ul {
 	gap: 15px;
 }
 
+#arrow-button {
+	border: none;
+	left: -70px;
+	position: relative;
+	height: 21px;
+	background-color: #FFF;
+}
+
 .Ajout-photo {
 	font-family: Syne;
 	font-size: 14px;
@@ -542,4 +550,108 @@ footer nav ul {
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 	background-color: #1d6154;
 	color: #FFF;
+	display: flex;
+	justify-content: center;
+}
+
+.ligne {
+	margin: 40px 0px;
+	width: 420px;
+	height: 0px;
+	border: 1px solid #B3B3B3;
+	background: #0000004D;
+
+}
+
+.submit-button {
+	margin-top: -40px;
+	background: #A7A7A7;
+	color: #FFF;
+	border: none;
+	width: 237px;
+	padding: auto;
+}
+
+#ajout-photo-titre {
+	font-family: Work Sans;
+	font-size: 26px;
+	font-weight: 400;
+	line-height: 30.5px;
+	text-align: center;
+	color: #000;
+	margin-bottom: 36px;
+}
+
+.photo-upload-label p {
+	font-family: Work Sans;
+	font-size: 10px;
+	font-weight: 400;
+	line-height: 11.73px;
+	text-align: center;
+	color: #444444;
+
+}
+
+.photo-upload-label {
+	background-color: #E8F1F6;
+	width: 420px;
+	height: 169px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border-radius: 3px;
+	gap: 10px;
+}
+
+#photoForm {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	gap: 30px;
+}
+
+#adb {
+	padding: 10px 35px 10px 35px;
+	border-radius: 50px;
+	color: #306685;
+	background-color: #CBD6DC;
+	font-family: Work Sans;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 16.42px;
+	text-align: center;
+
+}
+
+.form-group1 label {
+	font-family: Work Sans;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 16.42px;
+	text-align: left;
+	color: #3D3D3D;
+	align-self: start;
+
+}
+
+.form-group1 input {
+	box-shadow: 0px 4px 14px 0px #00000017;
+	border: none;
+	width: 420px;
+	height: 50px;
+}
+
+.form-group1 {
+	gap: 10px;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+
+}
+
+#photoCategory {
+	box-shadow: 0px 4px 14px 0px #00000017;
+	border: none;
+	width: 420px;
+	height: 50px;
 }
