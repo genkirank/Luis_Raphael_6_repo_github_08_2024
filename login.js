@@ -19,7 +19,7 @@ const login = async (data) => {
             }
             //Traitement de la Réponse si Connexion Réussie 
         } else {
-            const Data = await response.json
+            const Data = await response.json();
             const token = Data.token
             localStorage.setItem("authToken", token)
             window.location.href = "index.html";
