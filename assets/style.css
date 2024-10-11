@@ -538,6 +538,9 @@ footer nav ul {
 	position: relative;
 	height: 21px;
 	background-color: #FFF;
+	cursor: pointer;
+	/* Ajoutez cela pour montrer que le bouton est cliquable */
+
 }
 
 .Ajout-photo {
