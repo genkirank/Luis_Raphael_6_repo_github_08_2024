@@ -521,6 +521,8 @@ footer nav ul {
 	right: 0%;
 	height: -4%;
 	transition: transform 0.3s ease;
+	top: 29px;
+	left: 59px;
 }
 
 .Delete-photo {
@@ -552,6 +554,9 @@ footer nav ul {
 	color: #FFF;
 	display: flex;
 	justify-content: center;
+	left: 90px;
+	top: -14px;
+	position: relative;
 }
 
 .ligne {
