@@ -267,3 +267,26 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error("L'élément arrowButton n'a pas été trouvé dans le DOM.");
   }
 });
+// Fonction pour charger les catégories dans le sélecteur
+const loadCategories = async () => {
+  try {
+    // Récupérer les catégories depuis l'API
+    const categories = await fetchData("/categories"); // Utilise la fonction fetchData que vous avez déjà
+    const selectElement = document.getElementById("photoCategory");
+
+    if (selectElement) {
+      // Ajouter dynamiquement les options dans le select
+      categories.forEach((category) => {
+        const option = document.createElement("option");
+        option.value = category.id;
+        option.textContent = category.name;
+        selectElement.appendChild(option);
+      });
+    }
+  } catch (error) {
+    console.error("Erreur lors du chargement des catégories :", error);
+  }
+};
+
+// Appeler la fonction pour charger les catégories lorsque la page est prête
+document.addEventListener("DOMContentLoaded", loadCategories);
