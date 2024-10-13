@@ -267,11 +267,11 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error("L'élément arrowButton n'a pas été trouvé dans le DOM.");
   }
 });
-// Fonction pour charger les catégories dans le sélecteur
+// ----------------------------Ajout des categories en dynamique -------------------------------------
 const loadCategories = async () => {
   try {
     // Récupérer les catégories depuis l'API
-    const categories = await fetchData("/categories"); // Utilise la fonction fetchData que vous avez déjà
+    const categories = await fetchData("/categories");
     const selectElement = document.getElementById("photoCategory");
 
     if (selectElement) {
@@ -288,5 +288,28 @@ const loadCategories = async () => {
   }
 };
 
-// Appeler la fonction pour charger les catégories lorsque la page est prête
 document.addEventListener("DOMContentLoaded", loadCategories);
+const labelPreview = document.getElementById("labelPreview");
+//----------------------------------------------------------------------------------------
+document.getElementById("photoUpload").addEventListener("change", function (event) {
+  const file = event.target.files[0];
+  const uploadIcon = document.getElementById("uploadIcon");
+  const adbText = document.getElementById("adb");
+  const imgPreview = document.getElementById("imagePreview");
+
+  if (file && file.type.match("image.*")) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      // Masquer le SVG et le texte "+ Ajouter photo"
+      uploadIcon.style.display = "none";
+      adbText.style.display = "none";
+
+      // Afficher l'image prévisualisée
+      imgPreview.src = e.target.result;
+      imgPreview.style.display = "block";
+    };
+
+    reader.readAsDataURL(file); // Lire le fichier comme une URL de données
+  }
+});
