@@ -13,29 +13,31 @@
 </head>
 <body>
 <header>
-	<button class="edition Js-modal" id="button-edition">
+	<button class="edition js-modal" id="button-edition">
 		<img src="assets/icons/vector.png" alt="logo"> 
 		<h1>Mode édition</h1>
 	</button>
 	<!---------------modalDeletphoto-------zz---------->
 	<aside id ="modal1" class="modal" aria-hidden="true" role="dialog" aria-modal="false" style="display: none;">
 		<div class="modal-wrapper js-modal-stop">
-			<button class="js-close-modal">X</button>
-			<div class="Galerie-photo">
-				<h1>Galerie photo</h1>
-			</div>
-			<div class="Delete-photo"></div>
-			<div class="ligne"></div>
+			<div class="modal-content">
+				<button class="js-close-modal">X</button>
+				<div class="galerie-photo">
+					<h1>Galerie photo</h1>
+				</div>
+				<div class="delete-photo"></div>
+				<div class="ligne"></div>
 
-			<button class="Ajout-photo ">Ajouter une photo</button>
+				<button class="ajout-photo ">Ajouter une photo</button>
+			</div>
 		</div>
 	</aside>
 <!------------------modalADDphoto-------------------------->
 <dialog id="ajoutPhotoContent">
-			<button id="arrow-button">
-				<img src="assets/icons/arrow-left.png" id="arrow-left" alt="arrow-left">
-			</button>
-			<button class="js-close-modal">X</button>
+	<button onclick="arrowChange(event)" id="arrow-button">
+		<img src="assets/icons/arrow-left.png" id="arrow-left" alt="arrow-left">
+	</button>
+			<button class="js-close-modal2">X</button>
 			<h2 id="ajout-photo-titre">Ajout photo</h2>
 			<form id="photoForm">
 				<div class="form-group">
@@ -94,7 +96,7 @@
 	<section id="portfolio">
 		<div class="projet">
 			<h2>Mes Projets</h2>
-			<div class="Js-modal modifier"> 
+			<div class="js-modal modifier"> 
 				<img src="assets/icons/black-pen-to-square.png" alt="logo" id="black-pen-to-square" > 
 				<a id="modif-portfolio" class="hidden"></i>modifier</a>
 			</div>
@@ -116,14 +118,13 @@
 		</form>
 	</section>
 </main>
-
 <footer>
 	<nav>
-		<ul>
-			<li>Mentions Légales</li>
-		</ul>
+	   <ul>
+		  <li>Mentions Légales</li>
+	   </ul>
 	</nav>
-</footer>
-<script src="script.js"  ></script>
-</body>
-</html> 
+ </footer>
+ <script src="script.js"></script>
+ </body>
+ </html>
