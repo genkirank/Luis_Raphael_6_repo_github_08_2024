@@ -40,6 +40,7 @@ const loadGallery = async () => {
     displayGallery(gallery);
   }
 };
+
 // ------------------------ Afficher la galerie ------------------------
 const displayGallery = (gallery) => {
   const galleryContainer = document.querySelector(".gallery");
@@ -123,21 +124,21 @@ function loginLogout() {
 
   if (token) {
     if (logoutLink && loginLink) {
-      logoutLink.style.display = "block";
-      loginLink.style.display = "none";
+      logoutLink.style.display = "block"; // Afficher le lien de déconnexion
+      loginLink.style.display = "none"; // Cacher le lien de connexion
       logoutLink.addEventListener("click", () => {
-        localStorage.removeItem("authToken");
-        window.location.reload();
+        localStorage.removeItem("authToken"); // Retirer le token d'authentification
+        window.location.reload(); // Recharger la page
       });
     }
   } else {
     if (logoutLink && loginLink) {
-      logoutLink.style.display = "none";
-      loginLink.style.display = "block";
+      logoutLink.style.display = "none"; // Cacher le lien de déconnexion
+      loginLink.style.display = "block"; // Afficher le lien de connexion
     }
   }
 }
-loginLogout();
+loginLogout(); // Initialiser la fonction de connexion/déconnexion
 
 // ------------------------ Gestion de la modale ------------------------
 let modal = null;
@@ -147,9 +148,9 @@ const openModal = function (e) {
   const target = document.querySelector("#modal1");
   const addPhotoContent = document.querySelector("#ajoutPhotoContent");
   if (!target) return;
-  //afichage de la modal
+
   console.log("Ouverture de la modale");
-  const modalContent = document.querySelector(".modal-content")
+  const modalContent = document.querySelector(".modal-content");
   const modalWrapper = document.querySelector(".modal-wrapper");
   modalContent.style.display = "block";
   modalWrapper.style.display = "block";
@@ -157,13 +158,15 @@ const openModal = function (e) {
   addPhotoContent.style.display = "none";
   target.removeAttribute("aria-hidden");
   target.setAttribute("aria-modal", "true");
-  //fermeture 
+
+  // Fermeture de la modale
   modal = target;
   modal.addEventListener("click", closeModal);
   modal.querySelector(".js-close-modal").addEventListener("click", closeModal);
   modal.querySelector(".js-modal-stop").addEventListener("click", stopPropagation);
+
   if (loadPhoto) {
-    fetchData("/works").then(loadPhoto);
+    fetchData("/works").then(loadPhoto); // Charger les photos si la fonction est définie
   }
 };
 
@@ -178,13 +181,14 @@ const closeModal = function (e) {
   modal.querySelector(".js-close-modal").removeEventListener("click", closeModal);
   modal.querySelector(".js-modal-stop").removeEventListener("click", stopPropagation);
 
-  modal = null;
+  modal = null; // Réinitialiser la variable de modal
 };
 
 const stopPropagation = function (e) {
-  e.stopPropagation();
+  e.stopPropagation(); // Empêcher la propagation de l'événement
 };
-//déclenchement de la modal au click
+
+// Déclenchement de la modale au clic
 document.querySelectorAll(".js-modal").forEach((button) => {
   button.addEventListener("click", openModal);
 });
@@ -192,7 +196,7 @@ document.querySelectorAll(".js-modal").forEach((button) => {
 // Gestion de la fermeture de la modale avec la touche Échap
 window.addEventListener("keydown", function (e) {
   if (e.key === "Escape" || e.key === "Esc") {
-    closeModal(e);
+    closeModal(e); // Fermer la modale si Échap est pressé
   }
 });
 
@@ -201,7 +205,7 @@ const loadPhoto = (photos) => {
   let deletePhotoContainer = document.querySelector(".delete-photo");
 
   if (deletePhotoContainer) {
-    deletePhotoContainer.innerHTML = "";
+    deletePhotoContainer.innerHTML = ""; // Réinitialiser le conteneur de suppression
   } else {
     deletePhotoContainer = document.createElement("div");
     deletePhotoContainer.classList.add("delete-photo");
@@ -241,138 +245,130 @@ const loadPhoto = (photos) => {
       }
     });
 
-    figure.appendChild(trashIcon);
-    figure.appendChild(img);
-    deletePhotoContainer.appendChild(figure);
+    figure.appendChild(trashIcon); // Ajouter l'icône de suppression
+    figure.appendChild(img); // Ajouter l'image
+    deletePhotoContainer.appendChild(figure); // Ajouter le figure au conteneur
   });
 };
-
 // ------------------------ Gestion du bouton édition et affichage selon connexion ------------------------
-const token = localStorage.getItem("authToken");
+const token = localStorage.getItem("authToken"); // Récupère le token d'authentification
 const editionElement = document.querySelector(".edition");
 const modifierElement = document.querySelector(".modifier");
 const catégorieElement = document.querySelector(".catégorie");
+const projetdiv = document.querySelector(".projet");
 
 if (editionElement && modifierElement && catégorieElement) {
   if (token) {
     catégorieElement.style.display = "none";
     modifierElement.style.display = "";
     editionElement.style.display = "";
+    projetdiv.style.marginBottom = "128px";
   } else {
     modifierElement.style.display = "none";
     editionElement.style.display = "none";
     catégorieElement.style.display = "";
+    projetdiv.style.marginBottom = "";
   }
 }
-// ------------------------ Ajout de nouvelle image ------------------------
+
+// ------------------------ Variables et Sélecteurs ------------------------
 const addPhotoButton = document.querySelector(".ajout-photo");
 const imgPreview = document.getElementById("imagePreview");
 const modalWrapper = document.querySelector(".modal-wrapper");
 const target = document.querySelector("#ajoutPhotoContent");
-const modalContent = document.querySelector(".modal-content")
+const modalContent = document.querySelector(".modal-content");
+const imageInput = document.getElementById("image");
+const uploadIcon = document.getElementById("uploadIcon");
+const adbText = document.getElementById("adb");
+const photoForm = document.getElementById("photoForm");
+const submitButton = document.getElementById("submitButton");
+const categorySelect = document.getElementById("category");
+const titleInput = document.getElementById("title");
 
+// ------------------------ Ouvrir la modale d'ajout de photo ------------------------
 const openAddPhotoModal = function (e) {
   e.preventDefault();
   console.log("Ouvrir la modale d'ajout de photo");
-  // Sélectionne l'élément à ajouter
+
   if (!target) return;
-  // Insère le contenu d'ajout de photo dans le wrapper si nécessaire
+
   if (!modalWrapper.contains(target)) {
     modalWrapper.appendChild(target);
   }
-  // Affiche la modale et le contenu
+
   modalWrapper.style.display = "block";
   target.style.display = "block";
   modalContent.style.display = "none";
-  // Charger les catégories
-  loadCategories();
-  // Réinitialiser le formulaire
-  document.getElementById("photoForm").reset();
-  const uploadIcon = document.getElementById("uploadIcon");
-  const adbText = document.getElementById("adb");
+
+  loadCategories(); // Charge les catégories
+  photoForm.reset(); // Réinitialise le formulaire
+
+  // Afficher les éléments d'upload
   if (uploadIcon) uploadIcon.style.display = "block";
   if (adbText) adbText.style.display = "block";
 };
-//----------------fermer la modal 
-function closeModal2(e) {
+
+// ------------------------ Fermer la modale ------------------------
+const closeModal2 = function (e) {
   e.preventDefault();
   const modalWrapper = document.querySelector(".modal");
   if (modalWrapper) {
-    modalWrapper.style.display = "none"; // Masquer la modale
+    modalWrapper.style.display = "none";
   }
-}
+};
+
+// ------------------------ Écouteur d'événement DOMContentLoaded ------------------------
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelector(".js-close-modal2").addEventListener("click", closeModal2);
 });
-//------------------------------------------
-// Ouvrir la modale sur clic du bouton
+
+// ------------------------ Ouvrir la modale sur clic du bouton ------------------------
 addPhotoButton.addEventListener("click", openAddPhotoModal);
-//Fleche pour retournet en arriere ------------------------------
+
+// ------------------------ Flèche pour retourner en arrière ------------------------
 const arrowButton = document.querySelector("#arrow-button");
-let arrowChange = () => {
-  arrowButton.addEventListener("click", openModal)
+arrowButton.addEventListener("click", openModal);
+
+// ------------------------ Gestion du téléchargement de l'image dans le formulaire d'ajout ------------------------
+if (imageInput) {
+  imageInput.addEventListener("change", function (event) {
+    const file = event.target.files[0];
+
+    if (file && file.type.match("image.*")) { // Vérifie si un fichier image est sélectionné
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        uploadIcon.style.display = "none"; // Cacher l'icône d'upload
+        adbText.style.display = "none"; // Cacher le texte d'instructions
+        imgPreview.src = e.target.result; // Afficher l'image prévisualisée
+        imgPreview.style.display = "block"; // Afficher l'élément img
+      };
+      reader.readAsDataURL(file); // Convertit l'image en URL
+    } else {
+      console.error("Veuillez sélectionner une image valide.");
+    }
+  });
 }
-// ---------------------------------Gestion du téléchargement de l'image dans le formulaire d'ajout
-document.getElementById("image").addEventListener("change", function (event) {
-  const file = event.target.files[0];
 
-  // Sélection des éléments HTML
-  const uploadIcon = document.getElementById("uploadIcon");
-  const adbText = document.getElementById("adb");
-  const imgPreview = document.getElementById("imagePreview");
-
-  if (file && file.type.match("image.*")) { // Vérifie si un fichier image est sélectionné
-    const reader = new FileReader();
-
-    reader.onload = function (e) {
-      // Cache l'icône et le texte "Ajouter photo"
-      if (uploadIcon) uploadIcon.style.display = "none";
-      if (adbText) adbText.style.display = "none";
-
-      // Affiche l'aperçu de l'image
-      if (imgPreview) {
-        imgPreview.src = e.target.result; // Source de l'image
-        imgPreview.style.display = "block"; // Rends visible l'aperçu
-      }
-    };
-
-    reader.readAsDataURL(file); // Convertit l'image en URL
-  } else {
-    console.error("Veuillez sélectionner une image valide."); // Message d'erreur
-  }
-});
-
-//----------------------------------------------- Fonction pour envoyer les nouvelles photos à l'API
+// ------------------------ Fonction pour envoyer les nouvelles photos à l'API ------------------------
 const submitPhotoForm = async (event) => {
   event.preventDefault();
 
-  const formData = new FormData(document.getElementById("photoForm"));
+  const formData = new FormData(photoForm);
   const file = formData.get("image");
   const title = formData.get("title");
-  const category = formData.get("categoryId"); // Assure-toi d'utiliser le bon nom
+  const category = formData.get("category");
 
-  console.log('Données envoyées :', {
-    file: file,
-    title: title,
-    category: category,
-  });
-
-  // Vérifie si le fichier est valide
+  // Vérifiez que le fichier est valide
   if (!(file instanceof Blob)) {
     console.error('Le fichier n\'est pas valide.');
     alert("Veuillez sélectionner une image valide.");
     return;
   }
 
-  // Vérifie si tous les champs sont remplis
-  if (!file || !title || !category) {
+  if (!file || !title || !category) { // Si des champs sont manquants
     alert("Veuillez remplir tous les champs du formulaire.");
+    submitButton.classList.remove("submitButton");
     return;
-  }
-
-  // Log des données du formulaire
-  for (const [key, value] of formData.entries()) {
-    console.log(`${key}:`, value);
   }
 
   try {
@@ -380,7 +376,6 @@ const submitPhotoForm = async (event) => {
       method: "POST",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        // 'Content-Type': 'multipart/form-data' // Ne pas ajouter ici, le navigateur s'en occupe
       },
       body: formData,
     });
@@ -394,15 +389,35 @@ const submitPhotoForm = async (event) => {
     const newPhoto = await response.json();
     console.log("Réponse réussie", newPhoto);
     alert("Photo ajoutée avec succès !");
-    loadGallery();
-    closeModal();
-    document.getElementById("photoForm").reset();
-    imgPreview.style.display = "none";
+    loadGallery(); // Recharge la galerie pour afficher la nouvelle photo
+    photoForm.reset(); // Réinitialise le formulaire
+    imgPreview.style.display = "none"; // Cache la prévisualisation
+    submitButton.classList.remove("submitButton");
   } catch (error) {
     console.error("Erreur lors de l'envoi des données : ", error);
     alert("Erreur lors de l'ajout de la photo : " + error.message);
   }
+  closeModal3(); // Ferme la modale après l'envoi
 };
 
-// Gère la soumission du formulaire
-document.getElementById("photoForm").addEventListener("submit", submitPhotoForm);
+// Écouteurs d'événements pour la soumission du formulaire
+photoForm.addEventListener("submit", submitPhotoForm);
+
+// ------------------------ Fermeture du formulaire ------------------------
+const closeModal3 = function (e) {
+  if (e) {
+    e.preventDefault();
+  }
+
+  console.log("Fermeture de la modale");
+  if (modal === null) return;
+
+  modal.style.display = "none";
+  modal.setAttribute("aria-hidden", "true");
+  modal.setAttribute("aria-modal", "false");
+  modal.removeEventListener("click", closeModal);
+  modal.querySelector(".js-close-modal").removeEventListener("click", closeModal);
+  modal.querySelector(".js-modal-stop").removeEventListener("click", stopPropagation);
+
+  modal = null; // Réinitialiser la variable modal
+};
