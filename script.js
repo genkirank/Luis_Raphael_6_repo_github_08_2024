@@ -19,7 +19,7 @@ const fetchData = async (endpoint) => {
 const loadCategories = async () => {
   const categories = await fetchData("/categories");
   if (categories) {
-    const categorySelect = document.getElementById("photoCategory");
+    const categorySelect = document.getElementById("categoryId");
     if (categorySelect) {
       categorySelect.innerHTML = ""; // Réinitialiser le contenu
 
@@ -270,40 +270,28 @@ const imgPreview = document.getElementById("imagePreview");
 const modalWrapper = document.querySelector(".modal-wrapper");
 const target = document.querySelector("#ajoutPhotoContent");
 const modalContent = document.querySelector(".modal-content")
+
 const openAddPhotoModal = function (e) {
   e.preventDefault();
-
   console.log("Ouvrir la modale d'ajout de photo");
-
   // Sélectionne l'élément à ajouter
   if (!target) return;
-
-
   // Insère le contenu d'ajout de photo dans le wrapper si nécessaire
   if (!modalWrapper.contains(target)) {
     modalWrapper.appendChild(target);
   }
-
   // Affiche la modale et le contenu
   modalWrapper.style.display = "block";
   target.style.display = "block";
   modalContent.style.display = "none";
-
   // Charger les catégories
   loadCategories();
-
-  imgPreview.style.display = "none"; // Masquer l'aperçu par défaut
-
   // Réinitialiser le formulaire
   document.getElementById("photoForm").reset();
-
   const uploadIcon = document.getElementById("uploadIcon");
   const adbText = document.getElementById("adb");
   if (uploadIcon) uploadIcon.style.display = "block";
   if (adbText) adbText.style.display = "block";
-
-
-
 };
 //----------------fermer la modal 
 function closeModal2(e) {
@@ -319,78 +307,102 @@ document.addEventListener("DOMContentLoaded", () => {
 //------------------------------------------
 // Ouvrir la modale sur clic du bouton
 addPhotoButton.addEventListener("click", openAddPhotoModal);
-//test -----------------------------------
+//Fleche pour retournet en arriere ------------------------------
 const arrowButton = document.querySelector("#arrow-button");
 let arrowChange = () => {
   arrowButton.addEventListener("click", openModal)
 }
-
-// Gestion du téléchargement de l'image dans le formulaire d'ajout
-document.getElementById("photoUpload").addEventListener("change", function (event) {
+// ---------------------------------Gestion du téléchargement de l'image dans le formulaire d'ajout
+document.getElementById("image").addEventListener("change", function (event) {
   const file = event.target.files[0];
+
+  // Sélection des éléments HTML
   const uploadIcon = document.getElementById("uploadIcon");
   const adbText = document.getElementById("adb");
   const imgPreview = document.getElementById("imagePreview");
 
-  if (file && file.type.match("image.*")) {
+  if (file && file.type.match("image.*")) { // Vérifie si un fichier image est sélectionné
     const reader = new FileReader();
 
     reader.onload = function (e) {
-      // Masquer le SVG et le texte "+ Ajouter photo"
+      // Cache l'icône et le texte "Ajouter photo"
       if (uploadIcon) uploadIcon.style.display = "none";
       if (adbText) adbText.style.display = "none";
 
-      // Afficher l'image prévisualisée
+      // Affiche l'aperçu de l'image
       if (imgPreview) {
-        imgPreview.src = e.target.result;
-        imgPreview.style.display = "block";
+        imgPreview.src = e.target.result; // Source de l'image
+        imgPreview.style.display = "block"; // Rends visible l'aperçu
       }
     };
 
-    reader.readAsDataURL(file); // Lire le fichier comme une URL de données
+    reader.readAsDataURL(file); // Convertit l'image en URL
+  } else {
+    console.error("Veuillez sélectionner une image valide."); // Message d'erreur
   }
 });
 
-// Fonction pour envoyer les nouvelles photos à l'API
+//----------------------------------------------- Fonction pour envoyer les nouvelles photos à l'API
 const submitPhotoForm = async (event) => {
-  event.preventDefault(); // Empêche la soumission par défaut du formulaire
+  event.preventDefault();
 
   const formData = new FormData(document.getElementById("photoForm"));
-  const file = formData.get("photoUpload");
+  const file = formData.get("image");
+  const title = formData.get("title");
+  const category = formData.get("categoryId"); // Assure-toi d'utiliser le bon nom
 
-  if (!file || !file.type.match("image.*")) {
-    console.error("Veuillez sélectionner une image valide.");
+  console.log('Données envoyées :', {
+    file: file,
+    title: title,
+    category: category,
+  });
+
+  // Vérifie si le fichier est valide
+  if (!(file instanceof Blob)) {
+    console.error('Le fichier n\'est pas valide.');
+    alert("Veuillez sélectionner une image valide.");
     return;
   }
 
-  const title = formData.get("photoTitle");
-  const category = formData.get("photoCategory");
+  // Vérifie si tous les champs sont remplis
+  if (!file || !title || !category) {
+    alert("Veuillez remplir tous les champs du formulaire.");
+    return;
+  }
+
+  // Log des données du formulaire
+  for (const [key, value] of formData.entries()) {
+    console.log(`${key}:`, value);
+  }
 
   try {
     const response = await fetch(api + "/works", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        // 'Content-Type': 'multipart/form-data' // Ne pas ajouter ici, le navigateur s'en occupe
       },
       body: formData,
     });
 
     if (!response.ok) {
-      throw new Error("Erreur lors de l'envoi des données : " + response.statusText);
+      const errorText = await response.text();
+      console.error("Erreur lors de l'envoi : ", errorText);
+      throw new Error(`Erreur ${response.status}: ${response.statusText}`);
     }
 
     const newPhoto = await response.json();
-    console.log("Nouvelle photo ajoutée :", newPhoto);
-
-    // Recharger la galerie après ajout
+    console.log("Réponse réussie", newPhoto);
+    alert("Photo ajoutée avec succès !");
     loadGallery();
-
-    // Fermer la modale après ajout
     closeModal();
+    document.getElementById("photoForm").reset();
+    imgPreview.style.display = "none";
   } catch (error) {
-    console.error("Erreur lors de l'ajout de la nouvelle photo :", error);
+    console.error("Erreur lors de l'envoi des données : ", error);
+    alert("Erreur lors de l'ajout de la photo : " + error.message);
   }
 };
 
-// Soumission du formulaire d'ajout de photo
+// Gère la soumission du formulaire
 document.getElementById("photoForm").addEventListener("submit", submitPhotoForm);
