@@ -204,12 +204,12 @@ window.addEventListener("keydown", function (e) {
 const loadPhoto = (photos) => {
   let deletePhotoContainer = document.querySelector(".delete-photo");
 
-  if (deletePhotoContainer) {
-    deletePhotoContainer.innerHTML = ""; // Réinitialiser le conteneur de suppression
-  } else {
+  if (!deletePhotoContainer) {
     deletePhotoContainer = document.createElement("div");
     deletePhotoContainer.classList.add("delete-photo");
     document.querySelector(".modal-wrapper").appendChild(deletePhotoContainer);
+  } else {
+    deletePhotoContainer.innerHTML = ""; // Réinitialiser le conteneur de suppression
   }
 
   // Création des éléments pour chaque photo
@@ -228,6 +228,9 @@ const loadPhoto = (photos) => {
 
     // Suppression au clic
     trashIcon.addEventListener("click", async () => {
+      const confirmation = confirm("Êtes-vous sûr de vouloir supprimer cette photo ?");
+      if (!confirmation) return; // Sortir si l'utilisateur annule
+
       try {
         const response = await fetch(api + "/works/" + photo.id, {
           method: "DELETE",
@@ -239,9 +242,17 @@ const loadPhoto = (photos) => {
         if (!response.ok) {
           throw new Error("Erreur lors de la suppression : " + response.statusText);
         }
-        figure.remove(); // Supprime dans le HTML pour le rendre plus visible
+
+        alert("Photo supprimée avec succès !");
+
+        // Supprime l'élément figure de la modale immédiatement
+        figure.remove();
+
+        // Rechargez les photos après la suppression
+        loadGallery(); // Rechargement des photos pour mettre à jour l'affichage global
       } catch (error) {
         console.error("Erreur :", error.message);
+        alert("Erreur lors de la suppression : " + error.message); // Alerte utilisateur
       }
     });
 
@@ -250,6 +261,21 @@ const loadPhoto = (photos) => {
     deletePhotoContainer.appendChild(figure); // Ajouter le figure au conteneur
   });
 };
+
+// Exemple de fonction loadGallery
+const loadGallery2 = async () => {
+  try {
+    const response = await fetch(api + "/works");
+    if (!response.ok) {
+      throw new Error("Erreur lors du chargement des photos : " + response.statusText);
+    }
+    const photos = await response.json();
+    loadPhoto(photos); // Recharge les photos dans la modal
+  } catch (error) {
+    console.error("Erreur :", error.message);
+  }
+};
+
 // ------------------------ Gestion du bouton édition et affichage selon connexion ------------------------
 const token = localStorage.getItem("authToken"); // Récupère le token d'authentification
 const editionElement = document.querySelector(".edition");
@@ -326,8 +352,10 @@ document.addEventListener("DOMContentLoaded", () => {
 addPhotoButton.addEventListener("click", openAddPhotoModal);
 
 // ------------------------ Flèche pour retourner en arrière ------------------------
-const arrowButton = document.querySelector("#arrow-button");
-arrowButton.addEventListener("click", openModal);
+document.addEventListener("DOMContentLoaded", () => {
+  const arrowButton = document.querySelector("#arrow-button");
+  arrowButton.addEventListener("click", openModal);
+});
 
 // ------------------------ Gestion du téléchargement de l'image dans le formulaire d'ajout ------------------------
 if (imageInput) {
