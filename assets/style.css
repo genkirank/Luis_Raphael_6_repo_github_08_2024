@@ -447,8 +447,8 @@ footer nav ul {
 	margin-bottom: 15px;
 }
 
-.js-close-modal,
-.js-close-modal2 {
+.js-close-modal {
+	z-index: 1;
 	width: 10%;
 	border: white;
 	background: WHITE;
@@ -494,6 +494,8 @@ footer nav ul {
 #ajoutPhotoContent {
 	display: none;
 	border: none;
+	position: relative;
+    top: -35px;
 }
 
 .galerie-photo h1 {
@@ -551,8 +553,6 @@ footer nav ul {
 .delete-photo {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: center;
-	gap: 15px;
 }
 
 #arrow-button {
@@ -562,8 +562,8 @@ footer nav ul {
 	height: 21px;
 	background-color: #FFF;
 	cursor: pointer;
-	/* Ajoutez cela pour montrer que le bouton est cliquable */
-
+	position:relative;
+	top: -5px;
 }
 
 .ajout-photo {
@@ -586,7 +586,8 @@ footer nav ul {
 }
 
 .ligne {
-	margin: 40px 0px;
+	margin-top: 15px;
+    margin-bottom: 45px;
 	width: 420px;
 	height: 0px;
 	border: 1px solid #B3B3B3;

@@ -285,10 +285,9 @@ const projetdiv = document.querySelector(".projet");
 
 if (editionElement && modifierElement && catégorieElement) {
   if (token) {
-    catégorieElement.style.display = "none";
+    catégorieElement.style.visibility = "hidden";
     modifierElement.style.display = "";
     editionElement.style.display = "";
-    projetdiv.style.marginBottom = "128px";
   } else {
     modifierElement.style.display = "none";
     editionElement.style.display = "none";
@@ -321,7 +320,7 @@ const openAddPhotoModal = function (e) {
   if (!modalWrapper.contains(target)) {
     modalWrapper.appendChild(target);
   }
-
+// affichage De la modèle, ajoute photo
   modalWrapper.style.display = "block";
   target.style.display = "block";
   modalContent.style.display = "none";
@@ -329,23 +328,17 @@ const openAddPhotoModal = function (e) {
   loadCategories(); // Charge les catégories
   photoForm.reset(); // Réinitialise le formulaire
 
-  // Afficher les éléments d'upload
+  // Afficher les éléments d'upload = preveiw 
   if (uploadIcon) uploadIcon.style.display = "block";
   if (adbText) adbText.style.display = "block";
 };
 
-// ------------------------ Fermer la modale ------------------------
-const closeModal2 = function (e) {
-  e.preventDefault();
-  const modalWrapper = document.querySelector(".modal");
-  if (modalWrapper) {
-    modalWrapper.style.display = "none";
-  }
-};
+
+
 
 // ------------------------ Écouteur d'événement DOMContentLoaded ------------------------
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelector(".js-close-modal2").addEventListener("click", closeModal2);
+  document.querySelector(".js-close-modal").addEventListener("click", closeModal);
 });
 
 // ------------------------ Ouvrir la modale sur clic du bouton ------------------------
@@ -425,14 +418,14 @@ const submitPhotoForm = async (event) => {
     console.error("Erreur lors de l'envoi des données : ", error);
     alert("Erreur lors de l'ajout de la photo : " + error.message);
   }
-  closeModal3(); // Ferme la modale après l'envoi
+  closeAfterSubmit(); // Ferme la modale après l'envoi
 };
 
 // Écouteurs d'événements pour la soumission du formulaire
 photoForm.addEventListener("submit", submitPhotoForm);
 
 // ------------------------ Fermeture du formulaire ------------------------
-const closeModal3 = function (e) {
+const closeAfterSubmit = function (e) {
   if (e) {
     e.preventDefault();
   }
