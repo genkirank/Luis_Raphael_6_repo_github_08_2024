@@ -1,5 +1,4 @@
 const api = "http://localhost:5678/api";
-
 // ------------------------ Fonction de récupération des données ------------------------
 const fetchData = async (endpoint) => {
   try {
