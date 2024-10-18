@@ -13,6 +13,8 @@ const fetchData = async (endpoint) => {
     console.error("Erreur lors de la récupération des données :", error);
   }
 };
+
+
 // ------------------------ Charger les catégories ------------------------
 const loadCategories = async () => {
   const categories = await fetchData("/categories");
