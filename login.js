@@ -25,7 +25,7 @@ const login = async (data) => {
             localStorage.setItem("authToken", token)
             window.location.href = "index.html";
         }
-        //Gestion des Erreurs
+        //Gestion des Erreur
     } catch (error) {
         displayErrorMessage(error.message);
     }

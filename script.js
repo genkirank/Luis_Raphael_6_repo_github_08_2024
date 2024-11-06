@@ -7,7 +7,6 @@ const fetchData = async (endpoint) => {
       throw new Error("Problème : " + response.statusText);
     }
     const data = await response.json();
-    console.log("Données récupérées pour", endpoint, ":", data);
     return data;
   } catch (error) {
     console.error("Erreur lors de la récupération des données :", error);
@@ -149,7 +148,6 @@ const openModal = function (e) {
   const addPhotoContent = document.querySelector("#ajoutPhotoContent");
   if (!target) return;
 
-  console.log("Ouverture de la modale");
   const modalContent = document.querySelector(".modal-content");
   const modalWrapper = document.querySelector(".modal-wrapper");
   modalContent.style.display = "block";
@@ -171,7 +169,6 @@ const openModal = function (e) {
 };
 
 const closeModal = function (e) {
-  console.log("Fermeture de la modale");
   if (modal === null) return;
   e.preventDefault();
   modal.style.display = "none";
@@ -313,7 +310,6 @@ const titleInput = document.getElementById("title");
 // ------------------------ Ouvrir la modale d'ajout de photo ------------------------
 const openAddPhotoModal = function (e) {
   e.preventDefault();
-  console.log("Ouvrir la modale d'ajout de photo");
 
   if (!target) return;
 
@@ -332,9 +328,6 @@ const openAddPhotoModal = function (e) {
   if (uploadIcon) uploadIcon.style.display = "block";
   if (adbText) adbText.style.display = "block";
 };
-
-
-
 
 // ------------------------ Écouteur d'événement DOMContentLoaded ------------------------
 document.addEventListener("DOMContentLoaded", () => {
@@ -408,7 +401,6 @@ const submitPhotoForm = async (event) => {
     }
 
     const newPhoto = await response.json();
-    console.log("Réponse réussie", newPhoto);
     alert("Photo ajoutée avec succès !");
     loadGallery(); // Recharge la galerie pour afficher la nouvelle photo
     photoForm.reset(); // Réinitialise le formulaire
@@ -430,7 +422,6 @@ const closeAfterSubmit = function (e) {
     e.preventDefault();
   }
 
-  console.log("Fermeture de la modale");
   if (modal === null) return;
 
   modal.style.display = "none";
